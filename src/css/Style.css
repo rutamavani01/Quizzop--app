@@ -1,0 +1,143 @@
+:root {
+    --dark-blue: #131426;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+a {
+    text-decoration: none !important;
+
+}
+
+body {
+    background-color: var(--dark-blue) !important;
+    color: white;
+    background-image: url('/public/images/desktop_bg.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+.style_foreground__jJqg2 {
+    background-color: #191a32;
+    max-width: 500px;
+    overflow-x: hidden;
+    position: relative;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+header {
+    /* background-color: #3336708a; */
+    background-position: fixed !important;
+}
+
+.footer {
+    border-top: 1px solid #8789c3;
+    /* padding: 20px; */
+}
+
+.topic-btn {
+    border: 0;
+    border-bottom: 5px solid ;
+    border-radius: 10px;
+    padding: 8px 14px;
+}
+
+.topic-selection-footer {
+
+    border-top: 1px solid #8789c3;
+}
+
+.bg-dark-custom {
+    background-color: #131426;
+}
+
+/* Set button outline and text color */
+
+
+/* .mini-quiz {
+    background-image: url('/public/images/mini-quiz-bg.webp');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 10px;
+} */
+
+.scrollbar-arraws {
+    background-color: rgb(19, 20, 38);
+    padding: 10px 12px;
+    color: rgb(255, 204, 91);
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.offcanvas-btn {
+    background-color: transparent;
+    color: white;
+}
+
+.offcanvas.offcanvas-start {
+    top: 0;
+    left: 607px !important;
+    width:470px !important;
+  
+}
+.custom-placeholder::placeholder {
+    color: #8789c3;
+    font-weight: 600;
+  }
+  .quiz-topic-box{
+    border-left: 2px solid #3e51b5 ;
+  }
+
+  .begin-quiz-p{
+   font-size: 12px;
+   font-weight: 500;
+   text-align: start;
+  }
+  .fs-12{
+    font-size: 4px;
+  }
+
+  .text-CB36916 {
+    fill: #CB3691; /* Custom Color */
+  }
+  
+  .dark .text-CFFCC5B {
+    fill: #FFCC5B; /* Custom Dark Mode Color */
+  }
+  
+  
+  .custom-button {
+    background-color: transparent;
+    color: #FFFFFF;
+    border-radius: 15px;
+    padding: 6px 15px;
+    font-size: 13px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* accordian  */
+.accordion-button::before {
+    color: white; /* Changes the arrow to white */
+}

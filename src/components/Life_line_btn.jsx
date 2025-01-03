@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import themeColors from '../utils/colors';
 import { questions } from '../utils/utils';
+import { useAuth } from '../auth/AuthContext';
 
 const Life_line_btn = ({
     onClose,
     currentQuestionIndex,
-    setQuestionOptions,
+    onFiftyFifty,
     setPollResults,
-    setIsTimerFrozen
+    setIsTimerFrozen,
+    onFlipQuestion
 }) => {
+    const { themeColors } = useAuth();
     const [usedLifelines, setUsedLifelines] = useState({
         fifty: false,
         polling: false,
@@ -32,39 +34,49 @@ const Life_line_btn = ({
         opacity: used ? 0.5 : 1,
     });
 
+    // const handleFiftyFifty = () => {
+    //     if (!usedLifelines.fifty) {
+    //         const currentQuestion = questions[currentQuestionIndex];
+    //         const correctAnswerIndex = currentQuestion.answer;
+
+    //         const incorrectIndices = currentQuestion.options
+    //             .map((_, index) => index)
+    //             .filter(index => index !== correctAnswerIndex);
+
+    //         // Randomly select two incorrect indices to disable
+    //         const indicesToDisable = [
+    //             incorrectIndices[Math.floor(Math.random() * incorrectIndices.length)],
+    //             incorrectIndices.filter(index =>
+    //                 index !== incorrectIndices[0]
+    //             )[Math.floor(Math.random() * (incorrectIndices.length - 1))]
+    //         ];
+
+    //         // Highlight the correct answer and a non-disabled option
+    //         const highlightIndices = [
+    //             correctAnswerIndex,
+    //             currentQuestion.options.findIndex((_, index) =>
+    //                 !indicesToDisable.includes(index) && index !== correctAnswerIndex
+    //             )
+    //         ];
+
+    //         // Dispatch events to parent components
+    //         window.dispatchEvent(new CustomEvent('fiftyFifty', {
+    //             detail: {
+    //                 disabledOptions: indicesToDisable,
+    //                 highlightedOptions: highlightIndices
+    //             }
+    //         }));
+
+    //         setUsedLifelines(prevState => ({
+    //             ...prevState,
+    //             fifty: true
+    //         }));
+    //     }
+    // };
+
     const handleFiftyFifty = () => {
         if (!usedLifelines.fifty) {
-            const currentQuestion = questions[currentQuestionIndex];
-            const correctAnswerIndex = currentQuestion.answer;
-
-            const incorrectIndices = currentQuestion.options
-                .map((_, index) => index)
-                .filter(index => index !== correctAnswerIndex);
-
-            // Randomly select two incorrect indices to disable
-            const indicesToDisable = [
-                incorrectIndices[Math.floor(Math.random() * incorrectIndices.length)],
-                incorrectIndices.filter(index =>
-                    index !== incorrectIndices[0]
-                )[Math.floor(Math.random() * (incorrectIndices.length - 1))]
-            ];
-
-            // Highlight the correct answer and a non-disabled option
-            const highlightIndices = [
-                correctAnswerIndex,
-                currentQuestion.options.findIndex((_, index) =>
-                    !indicesToDisable.includes(index) && index !== correctAnswerIndex
-                )
-            ];
-
-            // Dispatch events to parent components
-            window.dispatchEvent(new CustomEvent('fiftyFifty', {
-                detail: {
-                    disabledOptions: indicesToDisable,
-                    highlightedOptions: highlightIndices
-                }
-            }));
-
+            onFiftyFifty();
             setUsedLifelines(prevState => ({
                 ...prevState,
                 fifty: true
@@ -116,30 +128,41 @@ const Life_line_btn = ({
         }
     };
 
+    // const handleFlipQuestion = () => {
+    //     if (!usedLifelines.flip) {
+    //         const remainingQuestions = questions.filter((q, index) => index !== currentQuestionIndex);
+
+    //         if (remainingQuestions.length > 0) {
+    //             const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
+    //             const newQuestion = remainingQuestions[randomIndex];
+
+    //             window.dispatchEvent(new CustomEvent('flipQuestion', {
+    //                 detail: {
+    //                     newQuestion: newQuestion,
+    //                     newQuestionIndex: questions.indexOf(newQuestion)
+    //                 }
+    //             }));
+
+    //             setUsedLifelines(prevState => ({
+    //                 ...prevState,
+    //                 flip: true
+    //             }));
+    //         } else {
+    //             alert("No more questions available to flip!");
+    //         }
+    //     }
+    // };
+
     const handleFlipQuestion = () => {
         if (!usedLifelines.flip) {
-            const remainingQuestions = questions.filter((q, index) => index !== currentQuestionIndex);
-
-            if (remainingQuestions.length > 0) {
-                const randomIndex = Math.floor(Math.random() * remainingQuestions.length);
-                const newQuestion = remainingQuestions[randomIndex];
-
-                window.dispatchEvent(new CustomEvent('flipQuestion', {
-                    detail: {
-                        newQuestion: newQuestion,
-                        newQuestionIndex: questions.indexOf(newQuestion)
-                    }
-                }));
-
-                setUsedLifelines(prevState => ({
-                    ...prevState,
-                    flip: true
-                }));
-            } else {
-                alert("No more questions available to flip!");
-            }
+            onFlipQuestion();  // Call the prop function
+            setUsedLifelines(prevState => ({
+                ...prevState,
+                flip: true
+            }));
         }
     };
+
 
     return (
         <div className="d-flex col-12 flex-wrap mt-5">
@@ -153,6 +176,7 @@ const Life_line_btn = ({
                     </div>
                     <p className="d-block mt-2 pb-4">50:50</p>
                 </div>
+
             </div>
 
             <div className="col-3 d-flex justify-content-center align-items-center text-center">
@@ -196,7 +220,7 @@ const Life_line_btn = ({
                     className="custom-button mt-3"
                     style={{
                         border: '1px solid',
-                        borderColor: themeColors.borderColor,
+                        borderColor: themeColors.colors.borderColor,
                     }}
                     onClick={onClose}
                 >

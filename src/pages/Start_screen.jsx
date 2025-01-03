@@ -1,20 +1,36 @@
-import React, { useState, createContext, useRef } from 'react';
+import React, { useState, createContext, useRef, useEffect } from 'react';
 import '../css/Style.css';
 import Footer from '../components/Footer';
 import Screen_header from '../components/Screen_header';
-import themeColors from '../utils/colors';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Quiz_Component from '../components/Quiz_Component';
 import Trending_Quiz from '../components/Trending_Quiz';
 import Top_Quiz from '../components/Top_Quiz';
 import topQuizzes, { contests } from '../utils/utils.js';
-
+import { getCategory } from '../api/Api.jsx';
+import { useAuth } from '../auth/AuthContext';
 const Start_screen = () => {
-
+    const { themeColors } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
 
     const [liked, setLiked] = useState([false, false, false]);
+
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await getCategory();
+                // console.log('API Response:', response);
+                setCategories(response.data || []);
+                setLiked(new Array(response.data.length).fill(false));
+            } catch (error) {
+                console.error('Failed to fetch categories:', error);
+                setCategories([]);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     const handleNavigate = () => {
         navigate('/category');
@@ -22,27 +38,26 @@ const Start_screen = () => {
 
     {/* Quiz Contests */ }
     const handlePlayClick = (contest) => {
-        console.log(`Navigating to contest: ${contest.title}`);
         navigate('/join-contest', { state: { contest } });
 
     };
 
     return (
         <div className="d-flex justify-content-center align-items-center">
-            <div style={{ backgroundColor: themeColors.backgroundColor, }}>
+            <div style={{ backgroundColor: themeColors.colors.backgroundColor, }}>
                 <Screen_header />
-                <div className="container p-0 text-center text-light " style={{ maxWidth: '492px', border: '4px solid', borderColor: themeColors.borderColor, }}>
+                <div className="container p-0 text-center text-light " style={{ maxWidth: '492px', border: '4px solid', borderColor: themeColors.colors.borderColor, }}>
                     <div className="mb-4">
 
                         {/* title */}
-                        <div className='d-flex justify-content-between align-items-center p-3'>
+                        <div className='d-flex justify-content-between align-items-center p-3 mt-2'>
                             <div>
-                                <p className='p-0 m-0' style={{ fontWeight: '700', fontSize: '17px', color: themeColors.headingText }}>Top Quizzes</p>
+                                <p className='p-0 m-0' style={{ fontWeight: '700', fontSize: '17px', color: themeColors.colors.headingText }}>Top Quizzes</p>
                             </div>
                             <div>
                                 <p
                                     className='p-0 m-0'
-                                    style={{ color: themeColors.titlebtn, fontWeight: '500', fontSize: '11px', cursor: 'pointer' }}
+                                    style={{ color: themeColors.colors.titlebtn, fontWeight: '500', fontSize: '11px', cursor: 'pointer' }}
                                     onClick={handleNavigate}
                                 >
                                     SEE ALL
@@ -51,10 +66,11 @@ const Start_screen = () => {
                             </div>
                         </div>
 
-                        <div className='d-flex flex-wrap justify-content-between text-white text-center p-2'>
-                            {topQuizzes?.map((quiz, index) => (
+                        <div className="d-flex flex-wrap justify-content-start text-white text-center p-2">
+                            {categories?.slice(0, 6).map((quiz, index) => ( // Limit to the first 6 items
                                 <Top_Quiz
-                                    className='col-4 p-2'
+                                    key={quiz.id} // Ensure a unique key is passed
+                                    className="col-4 p-2"
                                     objectData={quiz}
                                     isLiked={liked[index]}
                                     handleLike={() => {
@@ -67,22 +83,25 @@ const Start_screen = () => {
                                             navigate(`/view-quiztopic/${quiz.title.toLowerCase().replace(' ', '-')}`);
                                         } else if (location.pathname.includes('start-screen')) {
                                             navigate(`/begin-quiz/${quiz.title.toLowerCase().replace(' ', '-')}`, {
-                                                state: { quiz }
+                                                state: { contest: quiz },
                                             });
                                         }
-                                    }} />
+                                    }}
+                                />
                             ))}
                         </div>
 
+
+
                         {/* title */}
-                        <div className='d-flex justify-content-between align-items-center p-3 pt-0'>
+                        <div className='d-flex justify-content-between align-items-center p-3 pt-0 mt-2'>
                             <div>
-                                <p className='p-0 m-0' style={{ fontWeight: '700', fontSize: '17px', color: themeColors.headingText }}>Quiz Contests For You</p>
+                                <p className='p-0 m-0' style={{ fontWeight: '700', fontSize: '17px', color: themeColors.colors.headingText }}>Quiz Contests For You</p>
                             </div>
                             <div>
                                 <p
                                     className='p-0 m-0'
-                                    style={{ color: themeColors.titlebtn, fontWeight: '500', fontSize: '11px', cursor: 'pointer' }}
+                                    style={{ color: themeColors.colors.titlebtn, fontWeight: '500', fontSize: '11px', cursor: 'pointer' }}
                                     onClick={() => navigate('/contests')}
                                 >
                                     SEE ALL
@@ -94,12 +113,11 @@ const Start_screen = () => {
                         {/* Quiz Contests */}
 
                         <div className="d-flex flex-wrap p-2">
-                            {contests.map((contest, index) => (
-
+                            {categories.slice(0, 5).map((contest, index) => ( // Limit to the first 5 items
                                 <div
                                     key={index}
                                     className="card p-3 d-flex flex-row align-items-center text-white w-100 m-2"
-                                    style={{ backgroundColor: themeColors.SecondbgColor }}
+                                    style={{ backgroundColor: themeColors.colors.SecondbgColor }}
                                 >
                                     <Quiz_Component
                                         contest={contest}
@@ -108,6 +126,7 @@ const Start_screen = () => {
                                 </div>
                             ))}
                         </div>
+
 
                         {/* title Quiz Bites */}
                         {/* <div className='text-start p-3 pt-0'>
@@ -173,10 +192,10 @@ const Start_screen = () => {
                         {/* title */}
                         <div div className='d-flex justify-content-between align-items-center p-3 pt-0' >
                             <div>
-                                <p className='p-0 m-0' style={{ fontWeight: '700', fontSize: '17px', color: themeColors.headingText }}>Trending Quiz Topics</p>
+                                <p className='p-0 m-0' style={{ fontWeight: '700', fontSize: '17px', color: themeColors.colors.headingText }}>Trending Quiz Topics</p>
                             </div>
                             <div>
-                                <p className='p-0 m-0' style={{ color: themeColors.titlebtn, fontWeight: '500', fontSize: '11px', cursor: 'pointer' }} onClick={() => navigate('/category')}>
+                                <p className='p-0 m-0' style={{ color: themeColors.colors.titlebtn, fontWeight: '500', fontSize: '11px', cursor: 'pointer' }} onClick={() => navigate('/category')}>
                                     SEE ALL
                                     <i style={{ fontSize: '14px' }} className="fa-solid fa-circle-chevron-right ms-1"></i>
                                 </p>
@@ -184,7 +203,23 @@ const Start_screen = () => {
                         </div>
 
                         {/* trending quiz */}
-                        <Trending_Quiz />
+                        <Trending_Quiz
+                            objectData={categories}
+                            onClick={(category) => {
+                                const dynamicRoute = `/view-quiztopic/${category.title
+                                    .toLowerCase()
+                                    .replace(/\s+/g, '-')}`;
+                                navigate(dynamicRoute, {
+                                    state: {
+                                        categoryImage: category.image,
+                                        categoryTitle: category.title,
+                                        categoryDescription: category.description,
+                                    },
+                                });
+                            }}
+                        />
+
+
                     </div>
 
                     <Footer />

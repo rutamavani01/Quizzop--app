@@ -14,7 +14,7 @@ const Quiz = () => {
                 <div
                     className="container p-0 text-center text-light rounded"
                     style={{
-                            backgroundColor: themeColors.backgroundColor, 
+                            backgroundColor: themeColors.colors.backgroundColor, 
                         maxWidth: '492px',
                         border: '4px solid #3336708a',
                     }}

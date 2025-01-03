@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import themeColors from '../utils/colors';
 import See_all_header from '../components/See_all_header';
 import FooterBtn from '../components/Footer-btn';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import { getCategory } from '../api/Api';
+import { useAuth } from '../auth/AuthContext';
 
 const Join_contest = () => {
+    const { themeColors } = useAuth();
     const [showDropdown, setShowDropdown] = useState(false);
 
     const toggleDropdown = () => {
@@ -12,18 +15,20 @@ const Join_contest = () => {
     };
 
     const navigate = useNavigate();
-
     const handleRules = () => {
-        navigate('/rules')
-    }
+        navigate('/rules');
+    };
+
+    const location = useLocation();
+    const { contest } = location.state || {};
 
     return (
         <div className="d-flex justify-content-center align-items-center">
             <div style={{
-                backgroundColor: themeColors.backgroundColor,
+                backgroundColor: themeColors.colors.backgroundColor,
             }} >
                 <See_all_header />
-                <div className="container p-2 p-0 text-center text-light " style={{ maxWidth: '492px', width: '492px', border: '4px solid', borderColor: themeColors.borderColor, height: '100vh' }}>
+                <div className="container p-2 p-0 text-center text-light " style={{ maxWidth: '492px', width: '492px', border: '4px solid', borderColor: themeColors.colors.borderColor, height: '100vh' }}>
                     <div className="d-flex justify-content-between">
                         <div style={{ width: '100%' }}>
 
@@ -31,17 +36,18 @@ const Join_contest = () => {
                             <div
                                 className="p-3 m-4 text-start"
                                 style={{
-                                    backgroundColor: themeColors.SecondbgColor,
-                                    borderColor: themeColors.borderColor,
+                                    backgroundColor: themeColors.colors.SecondbgColor,
                                     borderWidth: '2px',
                                     fontWeight: '700',
                                     borderRadius: '10px',
+                                    border: `1px solid ${themeColors.colors.text}`,  // Use the correct 'borderColor'
                                 }}
+
                             >
-                                <div className="d-flex justify-content-start align-items-center">
+                                <div className="d-flex justify-content-start align-items-center" >
                                     <div
                                         style={{
-                                            width: '22%',
+                                            width: '21%',
                                             height: '100%',
                                             backgroundColor: 'white',
                                             borderRadius: '10px',
@@ -49,10 +55,10 @@ const Join_contest = () => {
                                         }}
                                     >
                                         <img
-                                            src="/images/quick_maths.png"
-                                            alt="quick maths"
-                                            width={70}
-                                            height={70}
+                                            src={contest.image}
+                                            alt={contest.title}
+                                            width={60}
+                                            height={60}
                                         />
                                     </div>
                                     <div className="text-start p-2">
@@ -64,7 +70,7 @@ const Join_contest = () => {
                                                 textTransform: 'uppercase',
                                             }}
                                         >
-                                            Brain Teasers
+                                            {contest.title}
                                         </p>
                                         <p>
                                             Play & Win{' '}

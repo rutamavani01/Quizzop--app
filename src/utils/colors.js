@@ -1,8 +1,6 @@
-const themeColors = {
-    // bg-color
+
+export const defaultThemeColors = {
     "backgroundColor": "#191a32",
-    // card-color
-    // "SecondbgColor": "#26284C",
     "SecondbgColor": "#26284c",
     "borderColor": '#282a4f',
 
@@ -16,17 +14,14 @@ const themeColors = {
     "wrongBtn": '#FF0000',
     "loginbutton": 'green',
     "loginbtnBorderColor": 'gray',
-    // -------------
+
+    // ------------- //-------------
 
     "buttonColor": "#191a32",
     "buttonTextColor": '#fff',
     "text_color": '#6063af',
     "btncolor": '#26284C',
 }
-
-
-
-export default themeColors;
 
 export const roundedButtons = {
     padding: '7px 12px',

@@ -4,13 +4,30 @@ import themeColors, { dotText } from '../utils/colors';
 import See_all_header from '../components/See_all_header';
 import Quiz_Component from '../components/Quiz_Component';
 import { contests } from '../utils/utils';
+import { getCategory } from '../api/Api';
+import { useAuth } from '../auth/AuthContext';
 
 const Contest_rank = () => {
+    const { themeColors } = useAuth();
     const location = useLocation();
     const score = location.state?.score || 0; // Retrieve score passed from the Quiz page, default to 0 if not found
     const [rank, setRank] = useState(3); // Set initial rank state
 
     const navigate = useNavigate();
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await getCategory();
+                // console.log('API Response:', response);
+                setCategories(response.data || []);
+            } catch (error) {
+                console.error('Failed to fetch categories:', error);
+                setCategories([]);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
         // Set rank based on score 
@@ -21,26 +38,31 @@ const Contest_rank = () => {
         } else {
             setRank(3);
         }
-    }, [score]); 
+    }, [score]);
 
-    // Handle play button click for contests
+    // const handlePlayClick = (contest) => {
+    //     console.log(`Navigating to contest: ${contest.title}`);
+    //     navigate('/quiz');
+    // };
+
     const handlePlayClick = (contest) => {
-        console.log(`Navigating to contest: ${contest.title}`);
-        navigate('/quiz');
+        navigate('/join-contest', { state: { contest } });
+
     };
+
 
     return (
         <div className="d-flex justify-content-center align-items-center">
             <div style={{ height: '100vh', width: '100%' }}>
                 <div className="container p-0 text-center text-light rounded" style={{
-                    backgroundColor: themeColors.backgroundColor,
+                    backgroundColor: themeColors.colors.backgroundColor,
                     maxWidth: '492px',
                     border: '4px solid #3336708a',
                 }}>
                     <See_all_header />
 
                     <div className='p-3'>
-                        <p className='p-0 m-0' style={{ color: themeColors.text_color, fontWeight: '700', fontSize: '12px' }}>Brain Teasers</p>
+                        <p className='p-0 m-0' style={{ color: themeColors.colors.text_color, fontWeight: '700', fontSize: '12px' }}>Brain Teasers</p>
                         <p className='fw-bold' style={{ fontSize: '18px' }}> Play & Win <img width="4%" src='./images/coin.png' /> 10,000</p>
                         <hr className='m-auto' style={{ width: '50%' }}></hr>
                         <p className='mt-2 fw-bold p-0 m-0' style={{ fontSize: '18px' }}>Well Played! 👍</p>
@@ -50,9 +72,9 @@ const Contest_rank = () => {
                     <div className='d-flex justify-content-center m-3'>
                         <div className='col-6'>
                             <div className='p-3' style={{
-                                backgroundColor: themeColors.buttonColor,
+                                backgroundColor: themeColors.colors.buttonColor,
                                 border: '1px solid',
-                                borderColor: themeColors.borderColor,
+                                borderColor: themeColors.colors.borderColor,
                                 borderRadius: '8px',
                                 width: '95%',
                             }}>
@@ -62,9 +84,9 @@ const Contest_rank = () => {
                         </div>
                         <div className='col-6'>
                             <div className='p-3' style={{
-                                backgroundColor: themeColors.buttonColor,
+                                backgroundColor: themeColors.colors.buttonColor,
                                 border: '1px solid',
-                                borderColor: themeColors.borderColor,
+                                borderColor: themeColors.colors.borderColor,
                                 borderRadius: '8px',
                                 width: '95%',
                             }}>
@@ -81,9 +103,17 @@ const Contest_rank = () => {
                     </div>
 
                     <div className="d-flex flex-wrap p-3 pt-0">
-                        {contests.map((contest, index) => (
-                            <div key={index} className="card p-3 d-flex flex-row align-items-center text-white w-100 m-2" style={{ backgroundColor: '#20213f' }}>
-                                <Quiz_Component contest={contest} onPlay={() => handlePlayClick(contest)} />
+                        {categories.map((contest, index,) => (
+                            <div
+                                key={index}
+                                className="card p-3 d-flex flex-row align-items-center text-white w-100 m-2"
+                                style={{ backgroundColor: themeColors.colors.SecondbgColor }}
+                            >
+                                <Quiz_Component
+
+                                    contest={contest}
+                                    onPlay={() => handlePlayClick(contest)}
+                                />
                             </div>
                         ))}
                     </div>

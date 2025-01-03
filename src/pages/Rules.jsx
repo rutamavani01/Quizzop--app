@@ -1,64 +1,89 @@
-import React from 'react'
-import themeColors, { dotText, footer_btn, loginButton } from '../utils/colors'
-import See_all_header from '../components/See_all_header'
-import { useNavigate } from 'react-router'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import See_all_header from '../components/See_all_header';
+import { useNavigate } from 'react-router';
+import { useAuth } from '../auth/AuthContext';
+import { dotText, footer_btn, loginButton } from '../utils/colors';
 
 export const Rules = () => {
-    const navigate = useNavigate()
+    const { themeColors } = useAuth();
+    const navigate = useNavigate();
+    const [rules, setRules] = useState([]);
+    const [error, setError] = useState(null);
+
     const handleBackHome = () => {
-        navigate('/start-screen')
-    }
+        navigate('/start-screen');
+    };
+
+    useEffect(() => {
+        const fetchRules = async () => {
+            try {
+                const response = await axios.get('http://192.168.1.8:8000/api/rules');
+                setRules(response.data.Data || []); // Assuming 'Data' contains the array of rules.
+            } catch (error) {
+                console.error('Error fetching rules:', error);
+                setError('Failed to fetch rules. Please try again later.');
+            }
+        };
+
+        fetchRules();
+    }, []);
+
     return (
         <div className="d-flex justify-content-center align-items-center">
-            <div style={{
-                backgroundColor: themeColors.backgroundColor,
-            }} >
+            <div
+                style={{
+                    backgroundColor: themeColors.colors.backgroundColor,
+                }}
+            >
                 <See_all_header />
-                <div className="container p-2 p-0 text-center text-light " style={{ maxWidth: '492px', width: '492px', border: '4px solid', borderColor: themeColors.borderColor }}>
-                    <div className='p-3 text-start'>
-                        <h3 style={{color:themeColors.headingText}}>Rules</h3>
+                <div
+                    className="container p-2 p-0 text-center text-light"
+                    style={{
+                        maxWidth: '492px',
+                        width: '492px',
+                        borderColor: themeColors.colors.borderColor,
+                        border: '4px solid',
+                    }}
+                >
+                    <div className="p-3 text-start">
+                        <h3 style={{ color: themeColors.colors.headingText }}>Rules</h3>
+                        {error ? (
+                            <p style={{ color: 'red' }}>{error}</p>
+                        ) : (
+                            <ul style={{ padding: '15px' }}>
+                                {rules.map((rule, index) => (
+                                    <li
+                                        key={rule.id || index}
+                                        style={{
+                                            color: themeColors.colors.text,
+                                            fontSize: dotText.fontSize,
+                                            fontWeight: dotText.fontWeight,
+                                            marginBottom: dotText.marginBottom,
+                                        }}
+                                    >
+                                        {rule.rules}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
 
-                        <ul style={{ padding: '15px' }}>
-                            <li style={{ color: themeColors.SecondbgColor, fontSize: dotText.fontSize, fontWeight: dotText.fontWeight, marginBottom: dotText.marginBottom }}>
-                                Each Quiz Contest lasts for a total of 90 - 150 seconds. In the given time, you are given a total of 10-30 questions to answer. The amount of time and number of questions may vary for each contest.
-                            </li>
-                            <li style={{ color: themeColors.SecondbgColor, fontSize: dotText.fontSize, fontWeight: dotText.fontWeight, marginBottom: dotText.marginBottom }}>
-                                If you answer a question correctly, you get 20 points.
-                            </li>
-                            <li style={{ color: themeColors.SecondbgColor, fontSize: dotText.fontSize, fontWeight: dotText.fontWeight, marginBottom: dotText.marginBottom }}>
-                                If your answer for a question is wrong, you get (-) 10 points.
-                            </li>
-                            <li style={{ color: themeColors.SecondbgColor, fontSize: dotText.fontSize, fontWeight: dotText.fontWeight, marginBottom: dotText.marginBottom }}>
-                                On answering 3 questions correctly in a row, you get a bonus of 10 points.
-                            </li>
-                            <li style={{ color: themeColors.SecondbgColor, fontSize: dotText.fontSize, fontWeight: dotText.fontWeight, marginBottom: dotText.marginBottom }}>
-                                Every Quiz Contest has a fixed start and end time. At the end of the Quiz Contest, every participant's score is put on a leaderboard and the winners are decided on the basis of their scores.
-                            </li>
-                            <li style={{ color: themeColors.SecondbgColor, fontSize: dotText.fontSize, fontWeight: dotText.fontWeight, marginBottom: dotText.marginBottom }}>
-                                Winners for each Quiz Contest are declared within 30 minutes of the end of the Quiz Contest.
-                            </li>
-                            <li style={{ color: themeColors.SecondbgColor, fontSize: dotText.fontSize, fontWeight: dotText.fontWeight, marginBottom: dotText.marginBottom }}>
-                                You can take help by using lifelines while playing the contest.
-                                There are 4 different lifelines :
-
-                                <ol style={{ marginTop: dotText.marginTop }}>  50:50 - Two incorrect options will be removed from the questions.</ol>
-                                <ol style={{ marginTop: dotText.marginTop }}>Audience Poll - The smart audience will help you to select the correct answer among the options present.</ol>
-                                <ol style={{ marginTop: dotText.marginTop }}> Freeze Timer - The ongoing timer will be paused for 30 seconds, giving the user more time to answer the question.</ol>
-                                <ol style={{ marginTop: dotText.marginTop }}>Flip Question - The current question will be interchanged by a new question.</ol>
-                            </li>
-                            <li style={{ color: themeColors.SecondbgColor, fontSize: dotText.fontSize, fontWeight: dotText.fontWeight, marginBottom: dotText.marginBottom }}>
-                                You will be able to use each lifeline only once in each contest.
-                            </li>
-                            <li style={{ color: themeColors.SecondbgColor, fontSize: dotText.fontSize, fontWeight: dotText.fontWeight, marginBottom: dotText.marginBottom }}>
-                                You'll be able to use the lifeline for free by watching an ad or by using a given amount of coins from your coin balance.
-                            </li>
-                        </ul>
-
-                        <button className='m-auto  d-flex justify-content-center topic-btn' onClick={handleBackHome} style={{ width: loginButton.width, fontWeight: loginButton.fontWeight, fontSize: loginButton.fontSize, background: footer_btn.background, color: footer_btn.color, }}>BACK TO HOME</button>
+                        <button
+                            className="m-auto d-flex justify-content-center topic-btn"
+                            onClick={handleBackHome}
+                            style={{
+                                width: loginButton.width,
+                                fontWeight: loginButton.fontWeight,
+                                fontSize: loginButton.fontSize,
+                                background: themeColors.colors.loginbutton    ,
+                                color: themeColors.colors.headingText,
+                            }}
+                        >
+                            BACK TO HOME
+                        </button>
                     </div>
-
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};

@@ -1,53 +1,10 @@
-import React, { useState, useRef } from 'react';
-import themeColors from '../utils/colors';
+import React, { useState, useEffect, useRef } from 'react';
+import { useAuth } from '../auth/AuthContext';
+import { getQuiz } from '../api/Api';
 
-const Trending_Quiz = () => {
-    // treding items
-    const trendingItems = [
-        {
-            title: 'India',
-            imgSrc: '/images/india-new.png',
-            bgColor: '#FFEBE6'
-        },
-        {
-            title: 'Bollywood',
-            imgSrc: '/images/bollywood.png',
-            bgColor: '#E6F7FF'
-        },
-        {
-            title: 'IPL',
-            imgSrc: '/images/ipl.png',
-            bgColor: '#E6FFE6'
-        },
-        {
-            title: 'Hindi English',
-            imgSrc: '/images/hindi_english.webp',
-            bgColor: '#FFF5E6'
-        },
-        {
-            title: 'Brain Teasers',
-            imgSrc: '/images/brain_teasers.png',
-            bgColor: '#FFF5E6'
-        },
-        {
-            title: 'IPL',
-            imgSrc: '/images/ipl.png',
-            bgColor: '#E6FFE6'
-        },
-        {
-            title: 'Hindi English',
-            imgSrc: '/images/hindi_english.webp',
-            bgColor: '#FFF5E6'
-        },
-        {
-            title: 'Brain Teasers',
-            imgSrc: '/images/brain_teasers.png',
-            bgColor: '#FFF5E6'
-        }
-    ];
-
+const Trending_Quiz = ({ objectData, onClick }) => {
+    const { themeColors } = useAuth();
     const sliderRef = useRef(null);
-
 
     const [showLeftArrow, setShowLeftArrow] = useState(false);
     const [showRightArrow, setShowRightArrow] = useState(true);
@@ -73,32 +30,43 @@ const Trending_Quiz = () => {
             setShowRightArrow(scrollLeft + clientWidth < scrollWidth);
         }
     };
-    
+
     return (
         <div className="position-relative">
-            {/* Left Arrow */}
             {showLeftArrow && (
                 <button
                     className="scrollbar-arraws position-absolute top-50 start-0 translate-middle-y"
                     onClick={scrollLeft}
                     style={{ zIndex: 1 }}
                 >
-                    <i className="fa-solid fa-chevron-left" style={{ fontSize: "13px",color:themeColors.text,backgroundColor:themeColors.backgroundColor }}></i>
+                    <i
+                        className="fa-solid fa-chevron-left"
+                        style={{
+                            fontSize: "13px",
+                            color: themeColors.colors.text,
+                            backgroundColor: themeColors.colors.backgroundColor,
+                        }}
+                    ></i>
                 </button>
             )}
 
-            {/* Right Arrow */}
             {showRightArrow && (
                 <button
                     className="scrollbar-arraws position-absolute top-50 end-0 translate-middle-y"
                     onClick={scrollRight}
                     style={{ zIndex: 1 }}
                 >
-                    <i className="fa-solid fa-chevron-right" style={{ fontSize: "13px",color:themeColors.text,backgroundColor:themeColors.backgroundColor }}></i>
+                    <i
+                        className="fa-solid fa-chevron-right"
+                        style={{
+                            fontSize: "13px",
+                            color: themeColors.colors.text,
+                            backgroundColor: themeColors.colors.backgroundColor,
+                        }}
+                    ></i>
                 </button>
             )}
 
-            {/* Slider Container */}
             <div
                 ref={sliderRef}
                 className="d-flex gap-2"
@@ -110,18 +78,19 @@ const Trending_Quiz = () => {
                 }}
                 onScroll={updateArrowVisibility}
             >
-                {trendingItems.map((item, index) => (
+                {objectData.map((item) => (
                     <div
-                        key={index}
+                        key={item.id}
                         className="p-3 d-inline-block"
                         style={{
-                            backgroundColor: item.bgColor,
+                            backgroundColor: "#FFF5E6",
                             borderRadius: "10px",
-                            flex: "0 0 auto",
+                            flex: "0 0 auto", cursor: "pointer"
                         }}
+                        onClick={() => onClick(item)}
                     >
                         <img
-                            src={item.imgSrc}
+                            src={item.image}
                             width={70}
                             height={70}
                             alt={item.title}
@@ -137,7 +106,7 @@ const Trending_Quiz = () => {
                 ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Trending_Quiz
+export default Trending_Quiz;

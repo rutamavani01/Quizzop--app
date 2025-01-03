@@ -13,6 +13,7 @@ import Menu from '../pages/Menu';
 import Quiz from '../pages/Quiz';
 import Contest_rank from '../pages/Contest_rank';
 import { Rules } from '../pages/Rules';
+import DynamicPages from '../pages/DynamicPages';
 
 const Routes = () => {
     return (
@@ -22,17 +23,18 @@ const Routes = () => {
                 <Route path='/start-quiz' element={<Start_quiz />} />
             </Route>
 
+            <Route path='/category' element={<Category />} />
+            <Route path='/start-screen' element={<Start_screen />} />
+            <Route path='/contests' element={<Contests />} />
+            <Route path="/view-quiztopic/:quizName" element={<View_Quiztopic />} />
+            <Route path="/begin-quiz/:quizName" element={<Begin_quiz />} />
+            <Route path='/join-contest' element={<Join_contest />} />
+            <Route path='/menu' element={<Menu />} />
+            <Route path='/quiz' element={<Quiz />} />
+            <Route path='/contest-rank' element={<Contest_rank />} />
+            <Route path='/rules' element={<Rules />} />
 
-                <Route path='/category' element={<Category />} />
-                <Route path='/start-screen' element={<Start_screen />} />
-                <Route path='/contests' element={<Contests />} />
-                <Route path="/view-quiztopic/:quizName" element={<View_Quiztopic />} />
-                <Route path="/begin-quiz/:quizName" element={<Begin_quiz />} />
-                <Route path='/join-contest' element={<Join_contest />} />
-                <Route path='/menu' element={<Menu />} />
-                <Route path='/quiz' element={<Quiz />} />
-                <Route path='/contest-rank' element={<Contest_rank />} />
-                <Route path='/rules' element={<Rules />} />
+            <Route path="dynamicpage/:id" element={<DynamicPages />} />
 
         </RouterRoutes>
     )

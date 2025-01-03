@@ -2,15 +2,20 @@ import React, { useState, createContext } from 'react';
 import '../css/Style.css';
 import Footer from '../components/Footer';
 import { useNavigate } from 'react-router';
-import themeColors, { loginButton, roundedButtons } from '../utils/colors';
+import { loginButton, roundedButtons } from '../utils/colors';
+import { useAuth } from '../auth/AuthContext.js';
 
 const Button = ({ label, image, onClick, isSelected }) => {
+    const { themeColors } = useAuth();
+
+    
+
     return (
         <button
             onClick={onClick}
             style={{
-                backgroundColor: themeColors.SecondbgColor,
-                color: themeColors.buttonTextColor,
+                backgroundColor: themeColors.colors.SecondbgColor,
+                color: themeColors.colors.buttonTextColor,
                 border: isSelected ? '1px solid yellow' : '1px solid #3336708a',
                 padding: roundedButtons.padding,
                 fontSize: roundedButtons.fontSize,
@@ -31,6 +36,7 @@ const Button = ({ label, image, onClick, isSelected }) => {
 const Get_started = () => {
 
     const navigate = useNavigate();
+    const { themeColors } = useAuth();
 
     const [selectedButtons, setSelectedButtons] = useState([]);
 
@@ -60,10 +66,10 @@ const Get_started = () => {
     return (
         <div className=" d-flex justify-content-center align-items-center">
             <div style={{
-                backgroundColor: themeColors.backgroundColor,
+                backgroundColor: themeColors.colors.backgroundColor,
                 height: '100vh',
             }} >
-                <div className="container p-2 p-0 text-center text-light " style={{ maxWidth: '492px', border: '4px solid', borderColor: themeColors.borderColor, height: '100vh', }}>
+                <div className="container p-2 p-0 text-center text-light " style={{ maxWidth: '492px', border: '4px solid', borderColor: themeColors.colors.borderColor, height: '100vh', }}>
                     <div className="d-flex justify-content-between">
                         <div>
                             {/* <Header /> */}
@@ -94,9 +100,9 @@ const Get_started = () => {
                         <button
                             className=" topic-btn mb-4"
                             style={{
-                                background: selectedButtons.length > 0 ? themeColors.loginbutton : '#333',
+                                background: selectedButtons.length > 0 ? themeColors.colors.loginbutton : '#333',
                                 color: selectedButtons.length > 0 ? 'white' : 'gray',
-                                borderColor: themeColors.loginbtnBorderColor,
+                                borderColor: themeColors.colors.loginbtnBorderColor,
                                 fontWeight: loginButton.fontWeight,
                                 fontSize: loginButton.fontSize,
                                 width: loginButton.width

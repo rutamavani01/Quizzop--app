@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
-const  Top_Quiz = ({ objectData, handleLike, isLiked, className, ...props }) => {
+const Top_Quiz = ({ handleLike, isLiked, className, objectData, ...props }) => {
+
   return (
     <div className={`${className}`} {...props}>
-      <div className='card'>
+      <div className="card " >
         <div
-          className='text-center p-3'
+          className="text-center p-4"
           style={{
             backgroundColor: 'white',
             borderRadius: '12px',
             position: 'relative',
-            cursor: 'pointer',
+            cursor: 'pointer',width:'100%',height:'130px'
           }}
         >
           <div
@@ -33,8 +34,14 @@ const  Top_Quiz = ({ objectData, handleLike, isLiked, className, ...props }) => 
             <i className={`fa-heart ${isLiked ? 'fa-solid' : 'fa-regular'}`} style={{ fontSize: '12px' }} />
           </div>
 
-          <img src={objectData.imgSrc} alt={objectData.title} className="img-fluid mb-3" width={70} height={70} />
-          <p className='text-dark m-0 p-0' style={{ fontSize: '11px', fontWeight: '700' }}>{objectData.title}</p>
+          <img
+            src={objectData.image}
+            alt={objectData?.title}
+            style={{ width: '60px', height: '60px', borderRadius: '8px' }}
+          />
+          <div>
+            <p className='mt-3' style={{ margin: 0, fontWeight: 'bold',fontSize:'13px' }}>{objectData?.title}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -42,14 +49,10 @@ const  Top_Quiz = ({ objectData, handleLike, isLiked, className, ...props }) => 
 };
 
 Top_Quiz.propTypes = {
-  objectData: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    // bgColor: PropTypes.string.isRequired,
-    imgSrc: PropTypes.string.isRequired,
-  }).isRequired,
   handleLike: PropTypes.func.isRequired,
   isLiked: PropTypes.bool.isRequired,
   className: PropTypes.string,
+  objectData: PropTypes.object.isRequired,
 };
 
 Top_Quiz.defaultProps = {
